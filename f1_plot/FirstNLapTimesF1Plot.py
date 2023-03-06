@@ -13,7 +13,7 @@ class FirstNLapTimesF1Plot(F1Plot):
         self.n = n
         self.retriever = data_retriever
 
-    def __load_data__(self) -> dict:
+    def __load_data__(self) -> (dict, dict):
         race_finishes: List[RaceFinish] = self.retriever.get_race_standings(self.season, self.race_round)
         driver_dict = {}
         for i in race_finishes:
@@ -21,13 +21,17 @@ class FirstNLapTimesF1Plot(F1Plot):
                 continue
             laps : List[Lap] = self.retriever.get_driver_laps(i.get_driver_id(), self.season, self.race_round)
             driver_dict[i.get_driver_id()] = laps
-        return driver_dict
+        drivers_data_dict = dict()
+        for driver_id in driver_dict:
+            drivers_data_dict[driver_id] = self.retriever.get_driver_info(driver_id=driver_id)
+        return driver_dict, drivers_data_dict
 
     def plot(self, to_file: str = "./f1_plot.png") -> None:
-        driver_dict = self.__load_data__()
+        driver_dict, drivers_data_dict = self.__load_data__()
         for driver in driver_dict:
             y_driver = list(map( lambda x: x.get_time_millis(), driver_dict[driver]))
             x_driver = list(range(0, len(driver_dict[driver])))
-            plt.plot(x_driver, y_driver, "o",markersize=3,label=driver)
+            driver_name = drivers_data_dict[driver].get_full_name() if driver in drivers_data_dict else driver
+            plt.plot(x_driver, y_driver, "o",markersize=3,label=driver_name)
         plt.legend()
         plt.savefig(to_file)

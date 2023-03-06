@@ -20,3 +20,9 @@ class UtilsTests(unittest.TestCase):
         result = data_retriever.time_to_float(input)
         expected = 1*60*1000 + 38*1000
         self.assertEqual(expected, result)
+
+    def test_millis_to_time_str(self):
+        input = 1*60*1000 + 38*1000 + 25
+        expected = "1:38.025"
+        result = data_retriever.float_to_time(input)
+        self.assertEqual(expected, result)

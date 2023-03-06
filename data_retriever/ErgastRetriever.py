@@ -1,6 +1,7 @@
 from typing import List
 import requests
 from data_retriever.DataRetriever import DataRetriever
+from data_retriever.Driver import Driver
 from data_retriever.Lap import Lap
 import json
 
@@ -10,9 +11,14 @@ ENDPOINT_TEMPLATE = "http://ergast.com/api/f1/{}/{}/drivers/{}/laps.json?limit=7
 
 RACE_RESULT_TEMPLATE = "http://ergast.com/api/f1/{}/{}/results.json"
 
+DRIVER_INFO_TEMPLATE = "http://ergast.com/api/f1/drivers/{}.json"
+
 
 def get_endpoint(driver_id: str, season: int, race_round: int) -> str:
     return ENDPOINT_TEMPLATE.format(season, race_round, driver_id)
+
+def get_driver_info_endpoint(driver_id: str) -> str:
+    return DRIVER_INFO_TEMPLATE.format(driver_id)
 
 def get_race_result_endpoint(season: int, race_round: int) -> str:
     return RACE_RESULT_TEMPLATE.format(season, race_round)
@@ -48,4 +54,14 @@ class ErgastRetriever(DataRetriever):
             new_finish = RaceFinish(position=int(obj["position"]), driver_id=obj["Driver"]["driverId"], points_gained=obj["points"])
             result.append(new_finish)
         return result
+
+    def get_driver_info(self, driver_id: str) -> Driver:
+        endpoint = get_driver_info_endpoint(driver_id)
+        response = requests.get(endpoint)
+        if not response.status_code == 200:
+            return None
+        json_string = response.content.decode('utf8').replace("'", '"')
+        json_value = json.loads(json_string)
+        return Driver(name=json_value[JSON_ROOT_OBJECT]["DriverTable"]["Drivers"][0]["givenName"], surname=json_value[JSON_ROOT_OBJECT]["DriverTable"]["Drivers"][0]["familyName"], driver_id=driver_id)
+
 

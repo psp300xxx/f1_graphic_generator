@@ -1,5 +1,6 @@
 from typing import List
 
+from data_retriever.Driver import Driver
 from data_retriever.Lap import Lap
 
 
@@ -8,4 +9,7 @@ class DataRetriever(object):
         pass
 
     def get_race_standings(self, season: int, race_round: int) -> list:
+        pass
+
+    def get_driver_info(self, driver_id: str)-> Driver:
         pass

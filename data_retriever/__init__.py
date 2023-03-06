@@ -1,1 +1,1 @@
-from .Utils import time_to_float
+from .Utils import time_to_float, float_to_time

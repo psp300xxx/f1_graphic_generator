@@ -14,7 +14,7 @@ def print_hi(name):
 
 def main():
     retriever = ErgastRetriever()
-    plotter = FirstNLapTimesF1Plot(season=2001, race_round=1, n=2, data_retriever=retriever)
+    plotter = FirstNLapTimesF1Plot(season=2017, race_round=1, n=2, data_retriever=retriever)
     plotter.plot()
 
 
