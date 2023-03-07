@@ -26,3 +26,9 @@ class UtilsTests(unittest.TestCase):
         expected = "1:38.025"
         result = data_retriever.float_to_time(input)
         self.assertEqual(expected, result)
+
+    def test_millis_to_time_str_round_value(self):
+        input = 95000
+        expected = "1:35"
+        result = data_retriever.float_to_time(input)
+        self.assertEqual(expected, result)

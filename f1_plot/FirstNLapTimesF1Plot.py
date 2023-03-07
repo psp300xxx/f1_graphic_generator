@@ -1,5 +1,7 @@
 from typing import List
 import matplotlib.pyplot as plt
+
+from data_retriever import float_to_time
 from data_retriever.DataRetriever import DataRetriever
 from data_retriever.Lap import Lap
 from data_retriever.RaceFinish import RaceFinish
@@ -34,4 +36,8 @@ class FirstNLapTimesF1Plot(F1Plot):
             driver_name = drivers_data_dict[driver].get_full_name() if driver in drivers_data_dict else driver
             plt.plot(x_driver, y_driver, "o",markersize=3,label=driver_name)
         plt.legend()
+        locs, labels = plt.yticks()
+        plt.yticks(locs, [ float_to_time(i) for i in locs ])
+        plt.xlabel("Time")
+        plt.xlabel("Laps")
         plt.savefig(to_file)
