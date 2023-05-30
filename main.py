@@ -2,6 +2,7 @@
 import argparse
 
 from data_retriever.ErgastRetriever import ErgastRetriever
+from f1_plot.DriverListLapTimesF1Plot import DriverListLapTimesF1Plot
 from f1_plot.FirstNLapTimesF1Plot import FirstNLapTimesF1Plot
 
 
@@ -16,14 +17,25 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-season", type=int, required=True)
 parser.add_argument("-round", type=int, required=True)
 parser.add_argument("-n", type=int, default=2)
+parser.add_argument("-driverList", type=str, default=None)
+
+def parseDriverList(driver_list: str) -> list:
+    drivers = driver_list.split(",")
+    return list(drivers)
 
 def main():
     args = parser.parse_args()
     season = args.season
     race_round = args.round
     n = args.n
+    driver_list = args.driverList
+    if driver_list is not None:
+        driver_list = parseDriverList(driver_list)
     retriever = ErgastRetriever()
-    plotter = FirstNLapTimesF1Plot(season=season, race_round=race_round, n=n, data_retriever=retriever)
+    if driver_list is not None:
+        plotter = DriverListLapTimesF1Plot(season=season, race_round=race_round, driver_list=driver_list, data_retriever=retriever)
+    else:
+        plotter = FirstNLapTimesF1Plot(season=season, race_round=race_round, n=n, data_retriever=retriever)
     plotter.plot()
 
 
