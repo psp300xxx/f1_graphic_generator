@@ -19,7 +19,7 @@ class DriverListLapTimesF1Plot(F1Plot):
         race_finishes: List[RaceFinish] = self.retriever.get_race_standings(self.season, self.race_round)
         driver_dict = {}
         for i in race_finishes:
-            if not i.get_driver_id() not in self.driver_surname_list:
+            if i.get_driver_id() not in self.driver_surname_list:
                 continue
             laps : List[Lap] = self.retriever.get_driver_laps(i.get_driver_id(), self.season, self.race_round)
             driver_dict[i.get_driver_id()] = laps
